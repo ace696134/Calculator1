@@ -1,180 +1,168 @@
+<!-- HTML, JavaScript, and CSS Calculator -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Normal & Geometry Calculator</title>
+<title>Animated Calculator</title>
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #f4f4f4;
-        padding: 20px;
-    }
-    h2 {
-        text-align: center;
-        color: #333;
-    }
-    .calculator {
-        background: #fff;
-        padding: 20px;
-        margin: 20px auto;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        max-width: 350px;
-    }
-    input, select, button {
-        width: 100%;
-        padding: 10px;
-        margin: 5px 0;
-        font-size: 16px;
-    }
-    button {
-        background: #28a745;
-        color: white;
-        border: none;
-        cursor: pointer;
-    }
-    button:hover {
-        background: #218838;
-    }
-    .result {
-        margin-top: 10px;
-        font-weight: bold;
-        color: #007bff;
-    }
+  /* Basic styling for body */
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f4f8;
+  }
+
+  /* Calculator container */
+  .calculator {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    overflow: hidden;
+    width: 300px;
+    transition: all 0.4s ease;
+  }
+
+  /* Display */
+  #display {
+    width: 100%;
+    height: 60px;
+    text-align: right;
+    padding: 10px;
+    font-size: 2em;
+    border-bottom: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+
+  /* Buttons grid */
+  .buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  button {
+    padding: 20px;
+    font-size: 1.2em;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    background: #f7f7f7;
+    transition: all 0.2s ease;
+  }
+
+  button:hover {
+    background: #e0e0e0;
+    transform: scale(1.1);
+  }
+
+  button:active {
+    background: #d0d0d0;
+  }
+
+  /* Switch buttons */
+  .switch {
+    width: 100%;
+    padding: 10px;
+    background: #3498db;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    transition: all 0.3s ease;
+  }
+
+  .switch:hover {
+    background: #2980b9;
+  }
+
+  .hidden {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.4s ease;
+  }
+
+  .visible {
+    max-height: 400px;
+    opacity: 1;
+  }
 </style>
 </head>
 <body>
 
-<h2>Normal Calculator</h2>
 <div class="calculator">
-    <input type="text" id="calc-display" placeholder="0" readonly>
-    <div>
-        <button onclick="appendValue('7')">7</button>
-        <button onclick="appendValue('8')">8</button>
-        <button onclick="appendValue('9')">9</button>
-        <button onclick="appendValue('/')">/</button>
-    </div>
-    <div>
-        <button onclick="appendValue('4')">4</button>
-        <button onclick="appendValue('5')">5</button>
-        <button onclick="appendValue('6')">6</button>
-        <button onclick="appendValue('*')">*</button>
-    </div>
-    <div>
-        <button onclick="appendValue('1')">1</button>
-        <button onclick="appendValue('2')">2</button>
-        <button onclick="appendValue('3')">3</button>
-        <button onclick="appendValue('-')">-</button>
-    </div>
-    <div>
-        <button onclick="appendValue('0')">0</button>
-        <button onclick="appendValue('.')">.</button>
-        <button onclick="calculate()">=</button>
-        <button onclick="appendValue('+')">+</button>
-    </div>
-    <div>
-        <button onclick="clearDisplay()" style="background:#dc3545;">C</button>
-    </div>
-</div>
+  <input type="text" id="display" disabled>
+  
+  <div class="buttons basic visible">
+    <button onclick="appendValue('7')">7</button>
+    <button onclick="appendValue('8')">8</button>
+    <button onclick="appendValue('9')">9</button>
+    <button onclick="appendValue('/')">/</button>
+    <button onclick="appendValue('4')">4</button>
+    <button onclick="appendValue('5')">5</button>
+    <button onclick="appendValue('6')">6</button>
+    <button onclick="appendValue('*')">*</button>
+    <button onclick="appendValue('1')">1</button>
+    <button onclick="appendValue('2')">2</button>
+    <button onclick="appendValue('3')">3</button>
+    <button onclick="appendValue('-')">-</button>
+    <button onclick="appendValue('0')">0</button>
+    <button onclick="appendValue('.')">.</button>
+    <button onclick="calculate()">=</button>
+    <button onclick="appendValue('+')">+</button>
+  </div>
 
-<h2>Geometry Calculator</h2>
-<div class="calculator">
-    <select id="shape" onchange="updateShapeInputs()">
-        <option value="">Select Shape</option>
-        <option value="circle">Circle</option>
-        <option value="rectangle">Rectangle</option>
-        <option value="triangle">Triangle</option>
-        <option value="square">Square</option>
-    </select>
-    <div id="shape-inputs"></div>
-    <button onclick="calculateGeometry()">Calculate</button>
-    <div class="result" id="geo-result"></div>
+  <div class="buttons scientific hidden">
+    <button onclick="appendValue('Math.sin(')">sin</button>
+    <button onclick="appendValue('Math.cos(')">cos</button>
+    <button onclick="appendValue('Math.tan(')">tan</button>
+    <button onclick="appendValue('Math.sqrt(')">√</button>
+    <button onclick="appendValue('Math.log(')">log</button>
+    <button onclick="appendValue('Math.pow(')">^</button>
+    <button onclick="appendValue('(')">(</button>
+    <button onclick="appendValue(')')">)</button>
+    <button onclick="appendValue('1')">1</button>
+    <button onclick="appendValue('2')">2</button>
+    <button onclick="appendValue('3')">3</button>
+    <button onclick="appendValue('+')">+</button>
+    <button onclick="appendValue('0')">0</button>
+    <button onclick="appendValue('.')">.</button>
+    <button onclick="calculate()">=</button>
+    <button onclick="appendValue('-')">-</button>
+  </div>
+
+  <button class="switch" onclick="toggleCalculator()">Switch Calculator</button>
 </div>
 
 <script>
-/* ---------------- NORMAL CALCULATOR ---------------- */
-function appendValue(val) {
-    document.getElementById('calc-display').value += val;
+let display = document.getElementById('display');
+
+// Append clicked button value to display
+function appendValue(value) {
+  display.value += value;
 }
 
+// Evaluate the calculation
 function calculate() {
-    try {
-        let expression = document.getElementById('calc-display').value;
-        if (expression.trim() === "") {
-            alert("Enter a valid expression.");
-            return;
-        }
-        document.getElementById('calc-display').value = eval(expression);
-    } catch (e) {
-        alert("Invalid calculation.");
-    }
+  try {
+    display.value = eval(display.value);
+  } catch {
+    display.value = 'Error';
+  }
 }
 
-function clearDisplay() {
-    document.getElementById('calc-display').value = "";
-}
-
-/* ---------------- GEOMETRY CALCULATOR ---------------- */
-function updateShapeInputs() {
-    let shape = document.getElementById('shape').value;
-    let inputsDiv = document.getElementById('shape-inputs');
-    inputsDiv.innerHTML = "";
-
-    if (shape === "circle") {
-        inputsDiv.innerHTML = '<input type="number" id="radius" placeholder="Radius">';
-    } else if (shape === "rectangle") {
-        inputsDiv.innerHTML = '<input type="number" id="length" placeholder="Length">' +
-                              '<input type="number" id="width" placeholder="Width">';
-    } else if (shape === "triangle") {
-        inputsDiv.innerHTML = '<input type="number" id="base" placeholder="Base">' +
-                              '<input type="number" id="height" placeholder="Height">';
-    } else if (shape === "square") {
-        inputsDiv.innerHTML = '<input type="number" id="side" placeholder="Side Length">';
-    }
-}
-
-function calculateGeometry() {
-    let shape = document.getElementById('shape').value;
-    let resultDiv = document.getElementById('geo-result');
-    let area = 0, perimeter = 0;
-
-    try {
-        if (shape === "circle") {
-            let r = parseFloat(document.getElementById('radius').value);
-            if (isNaN(r) || r <= 0) throw "Invalid radius";
-            area = Math.PI * r * r;
-            perimeter = 2 * Math.PI * r;
-        } 
-        else if (shape === "rectangle") {
-            let l = parseFloat(document.getElementById('length').value);
-            let w = parseFloat(document.getElementById('width').value);
-            if (isNaN(l) || isNaN(w) || l <= 0 || w <= 0) throw "Invalid dimensions";
-            area = l * w;
-            perimeter = 2 * (l + w);
-        } 
-        else if (shape === "triangle") {
-            let b = parseFloat(document.getElementById('base').value);
-            let h = parseFloat(document.getElementById('height').value);
-            if (isNaN(b) || isNaN(h) || b <= 0 || h <= 0) throw "Invalid dimensions";
-            area = 0.5 * b * h;
-            perimeter = "Depends on side lengths"; // Not enough info for exact perimeter
-        } 
-        else if (shape === "square") {
-            let s = parseFloat(document.getElementById('side').value);
-            if (isNaN(s) || s <= 0) throw "Invalid side length";
-            area = s * s;
-            perimeter = 4 * s;
-        } 
-        else {
-            throw "Please select a shape";
-        }
-
-        resultDiv.innerHTML = `Area: ${area.toFixed(2)}<br>Perimeter: ${perimeter}`;
-    } catch (err) {
-        resultDiv.innerHTML = `<span style="color:red;">Error: ${err}</span>`;
-    }
+// Toggle between basic and scientific calculators
+function toggleCalculator() {
+  const basic = document.querySelector('.buttons.basic');
+  const scientific = document.querySelector('.buttons.scientific');
+  basic.classList.toggle('hidden');
+  basic.classList.toggle('visible');
+  scientific.classList.toggle('hidden');
+  scientific.classList.toggle('visible');
 }
 </script>
 
-</body
+</body>
+</html>
