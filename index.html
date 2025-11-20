@@ -1,141 +1,166 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-	<script src=
-"https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.6.4/math.js"
-		integrity=
-"sha512-BbVEDjbqdN3Eow8+empLMrJlxXRj5nEitiCAK5A1pUr66+jLVejo3PmjIaucRnjlB0P9R3rBUs3g5jXc8ti+fQ=="
-		crossorigin="anonymous"
-		referrerpolicy="no-referrer"></script>
-	<script src=
-"https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.6.4/math.min.js"
-		integrity=
-"sha512-iphNRh6dPbeuPGIrQbCdbBF/qcqadKWLa35YPVfMZMHBSI6PLJh1om2xCTWhpVpmUyb4IvVS9iYnnYMkleVXLA=="
-		crossorigin="anonymous"
-		referrerpolicy="no-referrer"></script>
-	<!-- for styling -->
-	<style>
-		table {
-			border: 1px solid black;
-			margin-left: auto;
-			margin-right: auto;
-		}
-
-		input[type="button"] {
-			width: 100%;
-			padding: 20px 40px;
-			background-color: black;
-			color: white;
-			font-size: 24px;
-			font-weight: bold;
-			border: none;
-			border-radius: 5px;
-		}
-
-		input[type="text"] {
-			padding: 20px 30px;
-			font-size: 24px;
-			font-weight: bold;
-			border: none;
-			border-radius: 5px;
-			border: 2px solid black;
-		}
-	</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geometry Calculator</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .calculator {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        width: 320px;
+    }
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    label {
+        display: block;
+        margin-top: 10px;
+    }
+    select, input {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    button {
+        margin-top: 15px;
+        width: 100%;
+        padding: 10px;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #218838;
+    }
+    .result {
+        margin-top: 15px;
+        padding: 10px;
+        background: #e9ecef;
+        border-radius: 4px;
+    }
+</style>
 </head>
-<!-- create table -->
-<body bgcolor="gray">
-
 <body>
-	<table id="calcu">
-		<tr>
-			<td colspan="3"><input type="text" id="result"></td>
-			<!-- clr() function will call clr to clear all value -->
-			<td><input type="button" value="c" onclick="clr()" /> </td>
-		</tr>
-		<tr>
-			<!-- create button and assign value to each button -->
-			<!-- dis("1") will call function dis to display value -->
-			<td><input type="button" value="1" onclick="dis('1')"
-						onkeydown="myFunction(event)"> </td>
-			<td><input type="button" value="2" onclick="dis('2')"
-						onkeydown="myFunction(event)"> </td>
-			<td><input type="button" value="3" onclick="dis('3')"
-						onkeydown="myFunction(event)"> </td>
-			<td><input type="button" value="/" onclick="dis('/')"
-						onkeydown="myFunction(event)"> </td>
-		</tr>
-		<tr>
-			<td><input type="button" value="4" onclick="dis('4')"
-						onkeydown="myFunction(event)"> </td>
-			<td><input type="button" value="5" onclick="dis('5')"
-						onkeydown="myFunction(event)"> </td>
-			<td><input type="button" value="6" onclick="dis('6')"
-						onkeydown="myFunction(event)"> </td>
-			<td><input type="button" value="*" onclick="dis('*')"
-						onkeydown="myFunction(event)"> </td>
-		</tr>
-		<tr>
-			<td><input type="button" value="7" onclick="dis('7')"
-						onkeydown="myFunction(event)"> </td>
-			<td><input type="button" value="8" onclick="dis('8')"
-						onkeydown="myFunction(event)"> </td>
-			<td><input type="button" value="9" onclick="dis('9')"
-						onkeydown="myFunction(event)"> </td>
-			<td><input type="button" value="-" onclick="dis('-')"
-						onkeydown="myFunction(event)"> </td>
-		</tr>
-		<tr>
-			<td><input type="button" value="0" onclick="dis('0')"
-						onkeydown="myFunction(event)"> </td>
-			<td><input type="button" value="." onclick="dis('.')"
-						onkeydown="myFunction(event)"> </td>
-			<!-- solve function call function solve to evaluate value -->
-			<td><input type="button" value="=" onclick="solve()"> </td>
 
-			<td><input type="button" value="+" onclick="dis('+')"
-						onkeydown="myFunction(event)"> </td>
-		</tr>
-	</table>
+<div class="calculator">
+    <h2>Geometry Calculator</h2>
+    <label for="shape">Select Shape:</label>
+    <select id="shape" onchange="updateInputs()">
+        <option value="circle">Circle</option>
+        <option value="rectangle">Rectangle</option>
+        <option value="square">Square</option>
+        <option value="triangle">Triangle</option>
+    </select>
 
-	<script>
-		// Function that display value
-		function dis(val) {
-			document.getElementById("result").value += val
-		}
+    <div id="inputs"></div>
 
-		function myFunction(event) {
-			if (event.key == '0' || event.key == '1'
-				|| event.key == '2' || event.key == '3'
-				|| event.key == '4' || event.key == '5'
-				|| event.key == '6' || event.key == '7'
-				|| event.key == '8' || event.key == '9'
-				|| event.key == '+' || event.key == '-'
-				|| event.key == '*' || event.key == '/')
-				document.getElementById("result").value += event.key;
-		}
+    <button onclick="calculate()">Calculate</button>
 
-		let cal = document.getElementById("calcu");
-		cal.onkeyup = function (event) {
-			if (event.keyCode === 13) {
-				console.log("Enter");
-				let x = document.getElementById("result").value
-				console.log(x);
-				solve();
-			}
-		}
+    <div class="result" id="result"></div>
+</div>
 
-		// Function that evaluates the digit and return result
-		function solve() {
-			let x = document.getElementById("result").value
-			let y = math.evaluate(x)
-			document.getElementById("result").value = y
-		}
+<script>
+function updateInputs() {
+    const shape = document.getElementById("shape").value;
+    const inputsDiv = document.getElementById("inputs");
+    inputsDiv.innerHTML = "";
 
-		// Function that clear the display
-		function clr() {
-			document.getElementById("result").value = ""
-		}
-	</script>
+    if (shape === "circle") {
+        inputsDiv.innerHTML = `
+            <label>Radius:</label>
+            <input type="number" id="radius" min="0" step="any">
+        `;
+    } else if (shape === "rectangle") {
+        inputsDiv.innerHTML = `
+            <label>Length:</label>
+            <input type="number" id="length" min="0" step="any">
+            <label>Width:</label>
+            <input type="number" id="width" min="0" step="any">
+        `;
+    } else if (shape === "square") {
+        inputsDiv.innerHTML = `
+            <label>Side:</label>
+            <input type="number" id="side" min="0" step="any">
+        `;
+    } else if (shape === "triangle") {
+        inputsDiv.innerHTML = `
+            <label>Base:</label>
+            <input type="number" id="base" min="0" step="any">
+            <label>Height:</label>
+            <input type="number" id="height" min="0" step="any">
+            <label>Side A:</label>
+            <input type="number" id="sideA" min="0" step="any">
+            <label>Side B:</label>
+            <input type="number" id="sideB" min="0" step="any">
+            <label>Side C:</label>
+            <input type="number" id="sideC" min="0" step="any">
+        `;
+    }
+}
+
+function calculate() {
+    const shape = document.getElementById("shape").value;
+    let area = 0, perimeter = 0;
+
+    try {
+        if (shape === "circle") {
+            const r = parseFloat(document.getElementById("radius").value);
+            if (isNaN(r) || r <= 0) throw "Please enter a valid radius.";
+            area = Math.PI * r * r;
+            perimeter = 2 * Math.PI * r;
+        } 
+        else if (shape === "rectangle") {
+            const l = parseFloat(document.getElementById("length").value);
+            const w = parseFloat(document.getElementById("width").value);
+            if (isNaN(l) || l <= 0 || isNaN(w) || w <= 0) throw "Please enter valid dimensions.";
+            area = l * w;
+            perimeter = 2 * (l + w);
+        } 
+        else if (shape === "square") {
+            const s = parseFloat(document.getElementById("side").value);
+            if (isNaN(s) || s <= 0) throw "Please enter a valid side length.";
+            area = s * s;
+            perimeter = 4 * s;
+        } 
+        else if (shape === "triangle") {
+            const b = parseFloat(document.getElementById("base").value);
+            const h = parseFloat(document.getElementById("height").value);
+            const a = parseFloat(document.getElementById("sideA").value);
+            const c = parseFloat(document.getElementById("sideB").value);
+            const d = parseFloat(document.getElementById("sideC").value);
+            if ([b,h,a,c,d].some(v => isNaN(v) || v <= 0)) throw "Please enter valid triangle dimensions.";
+            area = 0.5 * b * h;
+            perimeter = a + c + d;
+        }
+
+        document.getElementById("result").innerHTML = `
+            <strong>Area:</strong> ${area.toFixed(2)}<br>
+            <strong>Perimeter:</strong> ${perimeter.toFixed(2)}
+        `;
+    } catch (err) {
+        document.getElementById("result").innerHTML = `<span style="color:red;">${err}</span>`;
+    }
+}
+
+// Initialize default inputs
+updateInputs();
+</script>
+
 </body>
 </html>
