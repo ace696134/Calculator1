@@ -1,137 +1,180 @@
-<!-- Language: HTML, CSS, JavaScript -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Combined Calculator</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .calculator {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
-            width: 320px;
-        }
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        input, select, button {
-            width: 100%;
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-            border: none;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .result {
-            margin-top: 15px;
-            font-weight: bold;
-            text-align: center;
-        }
-        .hidden { display: none; }
-        #toggleButtons { margin-bottom: 15px; }
-        #toggleButtons button { width: 48%; margin-right: 4%; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Normal & Geometry Calculator</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        padding: 20px;
+    }
+    h2 {
+        text-align: center;
+        color: #333;
+    }
+    .calculator {
+        background: #fff;
+        padding: 20px;
+        margin: 20px auto;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        max-width: 350px;
+    }
+    input, select, button {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0;
+        font-size: 16px;
+    }
+    button {
+        background: #28a745;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #218838;
+    }
+    .result {
+        margin-top: 10px;
+        font-weight: bold;
+        color: #007bff;
+    }
+</style>
 </head>
 <body>
-    <div class="calculator">
-        <div id="toggleButtons">
-            <button onclick="showCalculator('geometry')">Geometry</button>
-            <button onclick="showCalculator('normal')">Normal</button>
-        </div>
 
-        <!-- Geometry Calculator -->
-        <div id="geometryCalc">
-            <h2>Geometry Calculator</h2>
-            <select id="shape">
-                <option value="rectangle">Rectangle</option>
-                <option value="circle">Circle</option>
-                <option value="triangle">Triangle</option>
-            </select>
-            <input type="number" id="input1" placeholder="Enter first value" />
-            <input type="number" id="input2" placeholder="Enter second value (if needed)" />
-            <button onclick="calculateGeometry()">Calculate Area</button>
-            <div class="result" id="geoResult"></div>
-        </div>
-
-        <!-- Normal Calculator -->
-        <div id="normalCalc" class="hidden">
-            <h2>Normal Calculator</h2>
-            <input type="text" id="normalInput" placeholder="Enter expression, e.g., 2+2" />
-            <button onclick="calculateNormal()">Calculate</button>
-            <div class="result" id="normResult"></div>
-        </div>
+<h2>Normal Calculator</h2>
+<div class="calculator">
+    <input type="text" id="calc-display" placeholder="0" readonly>
+    <div>
+        <button onclick="appendValue('7')">7</button>
+        <button onclick="appendValue('8')">8</button>
+        <button onclick="appendValue('9')">9</button>
+        <button onclick="appendValue('/')">/</button>
     </div>
+    <div>
+        <button onclick="appendValue('4')">4</button>
+        <button onclick="appendValue('5')">5</button>
+        <button onclick="appendValue('6')">6</button>
+        <button onclick="appendValue('*')">*</button>
+    </div>
+    <div>
+        <button onclick="appendValue('1')">1</button>
+        <button onclick="appendValue('2')">2</button>
+        <button onclick="appendValue('3')">3</button>
+        <button onclick="appendValue('-')">-</button>
+    </div>
+    <div>
+        <button onclick="appendValue('0')">0</button>
+        <button onclick="appendValue('.')">.</button>
+        <button onclick="calculate()">=</button>
+        <button onclick="appendValue('+')">+</button>
+    </div>
+    <div>
+        <button onclick="clearDisplay()" style="background:#dc3545;">C</button>
+    </div>
+</div>
 
-    <script>
-        // Toggle calculator visibility
-        function showCalculator(type) {
-            document.getElementById('geometryCalc').classList.toggle('hidden', type !== 'geometry');
-            document.getElementById('normalCalc').classList.toggle('hidden', type !== 'normal');
+<h2>Geometry Calculator</h2>
+<div class="calculator">
+    <select id="shape" onchange="updateShapeInputs()">
+        <option value="">Select Shape</option>
+        <option value="circle">Circle</option>
+        <option value="rectangle">Rectangle</option>
+        <option value="triangle">Triangle</option>
+        <option value="square">Square</option>
+    </select>
+    <div id="shape-inputs"></div>
+    <button onclick="calculateGeometry()">Calculate</button>
+    <div class="result" id="geo-result"></div>
+</div>
+
+<script>
+/* ---------------- NORMAL CALCULATOR ---------------- */
+function appendValue(val) {
+    document.getElementById('calc-display').value += val;
+}
+
+function calculate() {
+    try {
+        let expression = document.getElementById('calc-display').value;
+        if (expression.trim() === "") {
+            alert("Enter a valid expression.");
+            return;
+        }
+        document.getElementById('calc-display').value = eval(expression);
+    } catch (e) {
+        alert("Invalid calculation.");
+    }
+}
+
+function clearDisplay() {
+    document.getElementById('calc-display').value = "";
+}
+
+/* ---------------- GEOMETRY CALCULATOR ---------------- */
+function updateShapeInputs() {
+    let shape = document.getElementById('shape').value;
+    let inputsDiv = document.getElementById('shape-inputs');
+    inputsDiv.innerHTML = "";
+
+    if (shape === "circle") {
+        inputsDiv.innerHTML = '<input type="number" id="radius" placeholder="Radius">';
+    } else if (shape === "rectangle") {
+        inputsDiv.innerHTML = '<input type="number" id="length" placeholder="Length">' +
+                              '<input type="number" id="width" placeholder="Width">';
+    } else if (shape === "triangle") {
+        inputsDiv.innerHTML = '<input type="number" id="base" placeholder="Base">' +
+                              '<input type="number" id="height" placeholder="Height">';
+    } else if (shape === "square") {
+        inputsDiv.innerHTML = '<input type="number" id="side" placeholder="Side Length">';
+    }
+}
+
+function calculateGeometry() {
+    let shape = document.getElementById('shape').value;
+    let resultDiv = document.getElementById('geo-result');
+    let area = 0, perimeter = 0;
+
+    try {
+        if (shape === "circle") {
+            let r = parseFloat(document.getElementById('radius').value);
+            if (isNaN(r) || r <= 0) throw "Invalid radius";
+            area = Math.PI * r * r;
+            perimeter = 2 * Math.PI * r;
+        } 
+        else if (shape === "rectangle") {
+            let l = parseFloat(document.getElementById('length').value);
+            let w = parseFloat(document.getElementById('width').value);
+            if (isNaN(l) || isNaN(w) || l <= 0 || w <= 0) throw "Invalid dimensions";
+            area = l * w;
+            perimeter = 2 * (l + w);
+        } 
+        else if (shape === "triangle") {
+            let b = parseFloat(document.getElementById('base').value);
+            let h = parseFloat(document.getElementById('height').value);
+            if (isNaN(b) || isNaN(h) || b <= 0 || h <= 0) throw "Invalid dimensions";
+            area = 0.5 * b * h;
+            perimeter = "Depends on side lengths"; // Not enough info for exact perimeter
+        } 
+        else if (shape === "square") {
+            let s = parseFloat(document.getElementById('side').value);
+            if (isNaN(s) || s <= 0) throw "Invalid side length";
+            area = s * s;
+            perimeter = 4 * s;
+        } 
+        else {
+            throw "Please select a shape";
         }
 
-        // Geometry Calculator
-        function calculateGeometry() {
-            const shape = document.getElementById('shape').value;
-            const input1 = parseFloat(document.getElementById('input1').value);
-            const input2 = parseFloat(document.getElementById('input2').value);
-            let area = 0;
-            if(shape === 'rectangle') area = input1 * input2;
-            else if(shape === 'circle') area = Math.PI * input1 * input1;
-            else if(shape === 'triangle') area = 0.5 * input1 * input2;
+        resultDiv.innerHTML = `Area: ${area.toFixed(2)}<br>Perimeter: ${perimeter}`;
+    } catch (err) {
+        resultDiv.innerHTML = `<span style="color:red;">Error: ${err}</span>`;
+    }
+}
+</script>
 
-            const resultText = isNaN(area) ? 'Please enter valid numbers' : `Area: ${area.toFixed(2)}`;
-            document.getElementById('geoResult').innerText = resultText;
-        }
-
-        document.getElementById('shape').addEventListener('change', function() {
-            const val = this.value;
-            if(val === 'circle') {
-                document.getElementById('input1').placeholder = "Enter radius";
-                document.getElementById('input2').style.display = 'none';
-            } else if(val === 'rectangle') {
-                document.getElementById('input1').placeholder = "Enter length";
-                document.getElementById('input2').placeholder = "Enter width";
-                document.getElementById('input2').style.display = 'block';
-            } else {
-                document.getElementById('input1').placeholder = "Enter base";
-                document.getElementById('input2').placeholder = "Enter height";
-                document.getElementById('input2').style.display = 'block';
-            }
-        });
-
-        if(document.getElementById('shape').value === 'circle') {
-            document.getElementById('input2').style.display = 'none';
-        }
-
-        // Normal Calculator
-        function calculateNormal() {
-            const input = document.getElementById('normalInput').value;
-            try {
-                const result = eval(input); // simple but watch inputs carefully (avoid untrusted input)
-                document.getElementById('normResult').innerText = `Result: ${result}`;
-            } catch {
-                document.getElementById('normResult').innerText = 'Invalid expression';
-            }
-        }
-    </script>
-</body>
-</html>
+</body
