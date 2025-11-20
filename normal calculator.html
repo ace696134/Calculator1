@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geometry Calculator</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .calculator {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        width: 320px;
+    }
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    label {
+        display: block;
+        margin-top: 10px;
+    }
+    select, input {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    button {
+        margin-top: 15px;
+        width: 100%;
+        padding: 10px;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #218838;
+    }
+    .result {
+        margin-top: 15px;
+        padding: 10px;
+        background: #e9ecef;
+        border-radius: 4px;
+    }
+</style>
+</head>
+<body>
+
+<div class="calculator">
+    <h2>Geometry Calculator</h2>
+    <label for="shape">Select Shape:</label>
+    <select id="shape" onchange="updateInputs()">
+        <option value="circle">Circle</option>
+        <option value="rectangle">Rectangle</option>
+        <option value="square">Square</option>
+        <option value="triangle">Triangle</option>
+    </select>
+
+    <div id="inputs"></div>
+
+    <button onclick="calculate()">Calculate</button>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+function updateInputs() {
+    const shape = document.getElementById("shape").value;
+    const inputsDiv = document.getElementById("inputs");
+    inputsDiv.innerHTML = "";
+
+    if (shape === "circle") {
+        inputsDiv.innerHTML = `
+            <label>Radius:</label>
+            <input type="number" id="radius" min="0" step="any">
+        `;
+    } else if (shape === "rectangle") {
+        inputsDiv.innerHTML = `
+            <label>Length:</label>
+            <input type="number" id="length" min="0" step="any">
+            <label>Width:</label>
+            <input type="number" id="width" min="0" step="any">
+        `;
+    } else if (shape === "square") {
+        inputsDiv.innerHTML = `
+            <label>Side:</label>
+            <input type="number" id="side" min="0" step="any">
+        `;
+    } else if (shape === "triangle") {
+        inputsDiv.innerHTML = `
+            <label>Base:</label>
+            <input type="number" id="base" min="0" step="any">
+            <label>Height:</label>
+            <input type="number" id="height" min="0" step="any">
+            <label>Side A:</label>
+            <input type="number" id="sideA" min="0" step="any">
+            <label>Side B:</label>
+            <input type="number" id="sideB" min="0" step="any">
+            <label>Side C:</label>
+            <input type="number" id="sideC" min="0" step="any">
+        `;
+    }
+}
+
+function calculate() {
+    const shape = document.getElementById("shape").value;
+    let area = 0, perimeter = 0;
+
+    try {
+        if (shape === "circle") {
+            const r = parseFloat(document.getElementById("radius").value);
+            if (isNaN(r) || r <= 0) throw "Please enter a valid radius.";
+            area = Math.PI * r * r;
+            perimeter = 2 * Math.PI * r;
+        } 
+        else if (shape === "rectangle") {
+            const l = parseFloat(document.getElementById("length").value);
+            const w = parseFloat(document.getElementById("width").value);
+            if (isNaN(l) || l <= 0 || isNaN(w) || w <= 0) throw "Please enter valid dimensions.";
+            area = l * w;
+            perimeter = 2 * (l + w);
+        } 
+        else if (shape === "square") {
+            const s = parseFloat(document.getElementById("side").value);
+            if (isNaN(s) || s <= 0) throw "Please enter a valid side length.";
+            area = s * s;
+            perimeter = 4 * s;
+        } 
+        else if (shape === "triangle") {
+            const b = parseFloat(document.getElementById("base").value);
+            const h = parseFloat(document.getElementById("height").value);
+            const a = parseFloat(document.getElementById("sideA").value);
+            const c = parseFloat(document.getElementById("sideB").value);
+            const d = parseFloat(document.getElementById("sideC").value);
+            if ([b,h,a,c,d].some(v => isNaN(v) || v <= 0)) throw "Please enter valid triangle dimensions.";
+            area = 0.5 * b * h;
+            perimeter = a + c + d;
+        }
+
+        document.getElementById("result").innerHTML = `
+            <strong>Area:</strong> ${area.toFixed(2)}<br>
+            <strong>Perimeter:</strong> ${perimeter.toFixed(2)}
+        `;
+    } catch (err) {
+        document.getElementById("result").innerHTML = `<span style="color:red;">${err}</span>`;
+    }
+}
+
+// Initialize default inputs
+updateInputs();
+</script>
+
+</body>
+</html>
