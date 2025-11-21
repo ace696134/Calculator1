@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit Conversion Calculator</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .converter {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        width: 300px;
+    }
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    select, input, button {
+        width: 100%;
+        padding: 8px;
+        margin: 8px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    button {
+        background: #28a745;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #218838;
+    }
+    .result {
+        margin-top: 15px;
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+
+<div class="converter">
+    <h2>Length Converter</h2>
+    <input type="number" id="inputValue" placeholder="Enter value" step="any">
+    
+    <label for="fromUnit">From:</label>
+    <select id="fromUnit">
+        <option value="m">Meters</option>
+        <option value="km">Kilometers</option>
+        <option value="mi">Miles</option>
+        <option value="ft">Feet</option>
+        <option value="in">Inches</option>
+    </select>
+    
+    <label for="toUnit">To:</label>
+    <select id="toUnit">
+        <option value="m">Meters</option>
+        <option value="km">Kilometers</option>
+        <option value="mi">Miles</option>
+        <option value="ft">Feet</option>
+        <option value="in">Inches</option>
+    </select>
+    
+    <button onclick="convert()">Convert</button>
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    // Conversion rates to meters
+    const conversionRates = {
+        m: 1,
+        km: 1000,
+        mi: 1609.34,
+        ft: 0.3048,
+        in: 0.0254
+    };
+
+    function convert() {
+        const value = parseFloat(document.getElementById("inputValue").value);
+        const fromUnit = document.getElementById("fromUnit").value;
+        const toUnit = document.getElementById("toUnit").value;
+        const resultDiv = document.getElementById("result");
+
+        // Input validation
+        if (isNaN(value)) {
+            resultDiv.textContent = "Please enter a valid number.";
+            resultDiv.style.color = "red";
+            return;
+        }
+
+        // Convert to meters first, then to target unit
+        const valueInMeters = value * conversionRates[fromUnit];
+        const convertedValue = valueInMeters / conversionRates[toUnit];
+
+        resultDiv.textContent = `${value} ${fromUnit} = ${convertedValue.toFixed(4)} ${toUnit}`;
+        resultDiv.style.color = "black";
+    }
+</script>
+
+</body>
+</html>
